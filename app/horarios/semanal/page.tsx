@@ -16,45 +16,24 @@ import {
 const invoices = [
   {
     invoice: "Carlos ramirez",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
   },
   {
     invoice: "Daniela lopez",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
   },
   {
     invoice: "Diego martinez",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
   },
   {
     invoice: "Juan riascos",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
   },
   {
     invoice: "Laura gomez",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
   },
   {
     invoice: "Miguel torres",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
   },
   {
     invoice: "Sofia navarro",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
   },
 ]
 
@@ -69,7 +48,7 @@ export default function Tablepage() {
     <CardContent >
 
     <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
+      <TableCaption>Horarios semanales </TableCaption>
       <TableHeader>
         <TableRow className="capitalize">
           <TableHead className="w-[120px]">Empleado</TableHead>
@@ -100,6 +79,5 @@ export default function Tablepage() {
     </Table>
     </CardContent>
 </Card>
-
   )
 }

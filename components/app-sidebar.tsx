@@ -2,17 +2,15 @@
 
 import * as React from "react"
 import {
-
   IconChartBar,
   IconDashboard,
-
   IconHelp,
-
   IconListDetails,
-
   IconSettings,
   IconUsers,
-  IconShoppingCartFilled
+  IconShoppingCartFilled,
+  IconMailbox,
+  IconClipboardPlus,
 } from "@tabler/icons-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -28,10 +26,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
+
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "mercamio5",
+    email: "supervision@mercamio.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
@@ -42,18 +41,32 @@ const data = {
       link:"dashboard"
     },
     {
-      title: "borradores",
+      title: "Borrador",
       url: "#",
       icon: IconListDetails,
-      link:"borradores"
+      link:"borrador"
     },
     {
-      title: "Analiticas",
+      title: "Semanal",
       url: "#",
       icon: IconChartBar,
+      link:"semanal"
     },
 
-    {
+
+        {
+      title: "Reportes",
+      url: "#",
+      icon: IconClipboardPlus,
+      link:"report"
+    },
+            {
+      title: "Permisos",
+      url: "#",
+      icon: IconMailbox,
+      link:"permisos"
+    },
+        {
       title: "Empleados",
       url: "#",
       icon: IconUsers,
@@ -71,9 +84,9 @@ const data = {
       url: "#",
       icon: IconHelp,
     },
+    
   ],
 }
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
