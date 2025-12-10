@@ -1,8 +1,11 @@
-import { PrismaClient, UserRole } from "@prisma/client";
+import bcrypt from "bcryptjs"
+import { PrismaClient, UserRole } from "@prisma/client"
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 async function main() {
+  const passwordHash = await bcrypt.hash("123456", 10)
+
   const branches = [
     "plaza",
     "jardin",
@@ -14,50 +17,50 @@ async function main() {
     "chia",
     "floresta",
     "calle5ta",
-  ];
+  ]
 
-  console.log("⏳ Creando sedes y usuarios...");
+  console.log("⏳ Creando sedes y usuarios...")
 
   for (const branchName of branches) {
     const branch = await prisma.branch.create({
       data: { name: branchName },
-    });
+    })
 
-    const clean = branchName.replace(/\s+/g, "");
+    const clean = branchName.replace(/\s+/g, "")
 
     // ADMIN
     await prisma.user.create({
       data: {
         name: `Administrador ${branchName}`,
         username: `admin_${clean}`,
-        passwordHash: "123456",
+        passwordHash,
         role: UserRole.ADMIN,
         branchId: branch.id,
       },
-    });
+    })
 
     // SUPERVISOR
     await prisma.user.create({
       data: {
         name: `Supervisor ${branchName}`,
         username: `super_${clean}`,
-        passwordHash: "123456",
+        passwordHash,
         role: UserRole.SUPERVISOR,
         branchId: branch.id,
       },
-    });
+    })
 
-    console.log(`✔ ${branchName} creada con usuarios admin y supervisor`);
+    console.log(`✔ ${branchName} creada con usuarios admin y supervisor`)
   }
 
-  console.log("🎉 Seed completado correctamente");
+  console.log("🎉 Seed completado correctamente")
 }
 
 main()
   .catch((err) => {
-    console.error("❌ Error en seed:", err);
-    process.exit(1);
+    console.error("❌ Error en seed:", err)
+    process.exit(1)
   })
   .finally(async () => {
-    await prisma.$disconnect();
-  });
+    await prisma.$disconnect()
+  })
