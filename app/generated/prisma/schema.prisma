@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+//
+// ENUMS
+//
+
+enum UserRole {
+  ADMIN
+  SUPERVISOR
+}
+
+enum IncidentType {
+  ABSENCE // ausencia
+  PERMISSION // permiso
+  MEDICAL // EPS/incapacidad
+  OTHER
+}
+
+//
+// MODELOS PRINCIPALES
+//
+
+// Sedes (plaza, jardin, la 39, guaduales, floraria, palmira, bogota, chia, floresta, calle5ta)
+model Branch {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique // ej: "plaza", "jardin", "bogota", etc.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  employees Employee[]
+  schedules Schedule[]
+  incidents Incident[]
+  users     User[]
+}
+
+// Usuarios del sistema (para login): admin y supervisor POR sede
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  username     String   @unique
+  passwordHash String
+  role         UserRole
+
+  branchId Int
+  branch   Branch @relation(fields: [branchId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Cajeros / personal sobre el que llevas horarios e incidencias
+model Employee {
+  id       Int     @id @default(autoincrement())
+  name     String
+  document String  @unique
+  role     String // Cajero, Auxiliar, etc.
+  isActive Boolean @default(true)
+
+  branchId Int
+  branch   Branch @relation(fields: [branchId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  schedules Schedule[]
+  incidents Incident[]
+}
+
+// Horarios por sede y empleado
+model Schedule {
+  id        Int      @id @default(autoincrement())
+  date      DateTime // día del turno
+  startTime DateTime
+  endTime   DateTime
+  boxNumber Int? // número de caja si aplica
+
+  branchId Int
+  branch   Branch @relation(fields: [branchId], references: [id])
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Incidencias (ausencias, permisos, EPS, etc.) por sede y empleado
+model Incident {
+  id            Int          @id @default(autoincrement())
+  type          IncidentType
+  reason        String
+  date          DateTime
+  durationHours Float?
+
+  branchId Int
+  branch   Branch @relation(fields: [branchId], references: [id])
+
+  employeeId Int
+  employee   Employee @relation(fields: [employeeId], references: [id])
+
+  createdAt DateTime @default(now())
+}
