@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  SUPERVISOR
+}
+
+enum IncidentType {
+  ABSENCE
+  PERMISSION
+  MEDICAL
+  OTHER
+}
+
+model Branch {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  employees Employee[]
+  schedules Schedule[]
+  incidents Incident[]
+  users     User[]
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  username     String    @unique
+  passwordHash String
+  role         UserRole
+
+  branchId     Int
+  branch       Branch    @relation(fields: [branchId], references: [id])
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Employee {
+  id        Int        @id @default(autoincrement())
+  name      String
+  document  String     @unique
+  role      String
+  isActive  Boolean    @default(true)
+
+  branchId  Int
+  branch    Branch     @relation(fields: [branchId], references: [id])
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  schedules Schedule[]
+  incidents Incident[]
+}
+
+model Schedule {
+  id         Int       @id @default(autoincrement())
+  date       DateTime
+  startTime  DateTime
+  endTime    DateTime
+  boxNumber  Int?
+  
+  branchId   Int
+  branch     Branch    @relation(fields: [branchId], references: [id])
+
+  employeeId Int
+  employee   Employee  @relation(fields: [employeeId], references: [id])
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Incident {
+  id            Int          @id @default(autoincrement())
+  type          IncidentType
+  reason        String
+  date          DateTime
+  durationHours Float?
+
+  branchId      Int
+  branch        Branch       @relation(fields: [branchId], references: [id])
+
+  employeeId    Int
+  employee      Employee     @relation(fields: [employeeId], references: [id])
+
+  createdAt     DateTime     @default(now())
+}
